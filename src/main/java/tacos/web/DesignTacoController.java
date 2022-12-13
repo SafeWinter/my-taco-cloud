@@ -15,7 +15,6 @@ import tacos.data.IngredientRepository;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Slf4j
@@ -24,7 +23,8 @@ import java.util.stream.StreamSupport;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
-    private IngredientRepository ingredientRepo;
+    private final IngredientRepository ingredientRepo;
+
     @Autowired
     public DesignTacoController(IngredientRepository ingredientRepo) {
         this.ingredientRepo = ingredientRepo;
@@ -36,29 +36,16 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder){
-        if(errors.hasErrors()) {
+    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
+        if (errors.hasErrors()) {
             return "design";
         }
         tacoOrder.addTaco(taco);
-        log.info("Processing taco: {}", taco);
         return "redirect:/orders/current";
     }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-//        List<Ingredient> ingredients = Arrays.asList(
-//            new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
-//            new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
-//            new Ingredient("GRBF", "Ground Beef", Type.PROTEIN),
-//            new Ingredient("CARN", "Carnitas", Type.PROTEIN),
-//            new Ingredient("TMTO", "Diced Tomatoes", Type.VEGGIES),
-//            new Ingredient("LETC", "Lettuce", Type.VEGGIES),
-//            new Ingredient("CHED", "Cheddar", Type.CHEESE),
-//            new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
-//            new Ingredient("SLSA", "Salsa", Type.SAUCE),
-//            new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
-//        );
         Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Arrays.stream(Ingredient.Type.values())
                 .forEach(type -> model.addAttribute(type.toString().toLowerCase(),

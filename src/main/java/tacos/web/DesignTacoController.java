@@ -10,6 +10,7 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Taco;
 import tacos.TacoOrder;
+import tacos.TacoUDT;
 import tacos.data.IngredientRepository;
 
 import javax.validation.Valid;
@@ -40,7 +41,7 @@ public class DesignTacoController {
         if (errors.hasErrors()) {
             return "design";
         }
-        tacoOrder.addTaco(taco);
+        tacoOrder.addTaco(new TacoUDT(taco.getName(), taco.getIngredients()));
         return "redirect:/orders/current";
     }
 

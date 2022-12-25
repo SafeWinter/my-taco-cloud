@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import tacos.Ingredient;
+import tacos.IngredientUDT;
 import tacos.data.IngredientRepository;
+
+import java.util.Optional;
 
 
 @Component
-public class IngredientByIdConverter implements Converter<String, Ingredient> {
+public class IngredientByIdConverter implements Converter<String, IngredientUDT> {
     private final IngredientRepository ingredientRepo;
 
     @Autowired
@@ -17,7 +20,8 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
     }
 
     @Override
-    public Ingredient convert(String id) {
-        return ingredientRepo.findById(id).orElse(null);
+    public IngredientUDT convert(String id) {
+        Ingredient target = ingredientRepo.findById(id).orElse(null);
+        return new IngredientUDT(target.getName(), target.getType());
     }
 }

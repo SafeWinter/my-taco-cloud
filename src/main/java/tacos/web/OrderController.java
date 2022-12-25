@@ -27,12 +27,6 @@ public class OrderController {
         return "orderForm";
     }
 
-    @GetMapping("test")
-    @ResponseBody
-    public String testQuery() {
-        return orderRepo.readOrdersDeliveredInSeattle().get(0).toString();
-    }
-
     @PostMapping
     public String processOrder(
             @Valid TacoOrder order, Errors errors,
